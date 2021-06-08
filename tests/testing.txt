@@ -1,0 +1,31 @@
+MODELS:
+
+user
+-unit test add username, email address and password 
+-integration test add to database and delete from database
+
+
+Item
+-unit test add name, price, barcode and description
+
+
+
+FORMS:
+
+Register
+-nothing entered
+-valid username
+-valid email
+-existing username
+-existing email
+-valid password
+-short password
+-confirm password valid
+-confirm password invalid
+
+Login
+-enteries blank
+-valid login details
+-invalid login(valid username/invalid password and invalid username/valid password)
+-non-existing user
+
