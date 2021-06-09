@@ -4,11 +4,16 @@ from market.models import User, Item
 
 class TestModels(TestCase):
     def test_user(self):
-        user = User(username='qwerty', email_address='test@gmail.com', password_hash='password')
+        user = User(username='qwerty', email_address='test@gmail.com', password_hash='password', budget=1100)
         
         self.assertEqual(user.username, 'qwerty', "this the username")
         self.assertEqual(user.email_address, 'test@gmail.com', "testing email")
         self.assertEqual(user.password_hash, 'password', "test password")
+        self.assertEqual(user.budget, 1100)
+    
+    def test_prettier_budget(self):
+        budget = User(username='qwerty', email_address='test@gmail.com', password_hash='password', budget=1100).prettier_budget
+        self.assertEqual(budget, "1,100$")
         
         
     def test_item(self):
