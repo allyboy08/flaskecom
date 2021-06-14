@@ -1,7 +1,7 @@
 # import sys
 # sys.path.append("tests/test_base")
-from tests.test_base import BaseTest
-from market.__init__ import db
+from tests.test_base import BaseTest, db
+# from market.__init__ import db
 from market.models import User, Item
 from flask import request
 from flask_login import current_user, AnonymousUserMixin
@@ -45,7 +45,7 @@ class TestRegister(BaseTest):
             
     
     
-    # def test_user_registeration(self):
+    #def test_user_registeration(self):
     #     with self.app:
     #         response = self.app.post('/register', data=dict(
     #             username='kevin', email_address='test@gmail.com',
@@ -66,5 +66,10 @@ class TestLogin(BaseTest):
             self.assertEqual(response.status_code, 200)
             self.assertIn(b'Please Login', response.data)
  
+            
+
+          
+          
+            
             
             

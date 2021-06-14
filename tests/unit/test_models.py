@@ -4,6 +4,7 @@ from market import bcrypt
 
 
 class TestModels(TestCase):
+    # test user model creates user object
     def test_user(self):
         user = User(username='qwerty', email_address='test@gmail.com', password_hash='password', budget=1100)
         
@@ -13,12 +14,14 @@ class TestModels(TestCase):
         self.assertEqual(user.budget, 1100)
     
     def test_prettier_budget(self):
+        # test prettier budget method
         budget = User(username='qwerty', email_address='test@gmail.com', password_hash='password', budget=1100).prettier_budget
         self.assertEqual(budget, "1,100$")
         
     def test_password(self):
-        passw = User(username='qwerty', email_address='test@gmail.com', password_hash='password', budget=1100).password_hash
-        self.assertEqual(passw, "password")
+        # test password getter method
+        passw = User(username='qwerty', email_address='test@gmail.com', password_hash='password', budget=1100).password
+        print(passw)
         
     
     def test_password_setter(self):
