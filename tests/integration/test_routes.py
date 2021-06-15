@@ -58,7 +58,7 @@ class TestLogin(BaseTest):
             
 
 class TestLogout(BaseTest):
-    def test_(self):
+    def test_logout(self):
         with self.app:
             response = self.app.post('/register', data=dict(
                 username='steve', email_address='okays@gmail.com',
@@ -84,15 +84,97 @@ class TestLogout(BaseTest):
             self.assertFalse(current_user.is_active)
 
 
-# class TestMarket(BaseTest):
-#     def test_can_purchase(self):
-#         with self.app:
+class TestMarket(BaseTest):
+    def test_can_purchase(self):
+        with self.app:
+           
+            
+            response = self.app.post('/register', data=dict(username='test4', email_address='test3@test.com', password1='password', password2='password'), follow_redirects=True)
+            self.assertEqual(current_user.get_id(), '1')
+            user = db.session.query(User).filter_by(username='test4').first()
+            user.budget = 5000
+            db.session.commit()
+            # check if user budget is 5000
+            self.assertEqual(user.budget, 5000)
+            
+            # create item save to db
+            item = Item(name='paper', price=1200, barcode='testing', description='white')
+            db.session.add(item)
+            db.session.commit()
+            result = db.session.query(Item).filter_by(name="paper").first()
+            self.assertTrue(result)
+            
+            # buy item in market
+            response = self.app.post('/market',data=dict(purchased_item='paper') ,follow_redirects=True)
             
             
-           
-           
+            self.assertIn(b'Congratulations! You purchased paper for 1200$', response.data)
 
 
+    def test_can_not_purchase(self):
+        with self.app:
+           
+            
+            response = self.app.post('/register', data=dict(username='test5', email_address='test5@test.com', password1='password', password2='password'), follow_redirects=True)
+            self.assertEqual(current_user.get_id(), '1')
+            user = db.session.query(User).filter_by(username='test5').first()
+            user.budget = 1000
+            db.session.commit()
+            # check if user budget is 1000
+            self.assertEqual(user.budget, 1000)
+            
+            # create item save to db
+            item = Item(name='paper', price=1200, barcode='testing', description='white')
+            db.session.add(item)
+            db.session.commit()
+            result = db.session.query(Item).filter_by(name="paper").first()
+            self.assertTrue(result)
+            
+            # buy item in market
+            response = self.app.post('/market',data=dict(purchased_item='paper') ,follow_redirects=True)
+            
+            
+            self.assertIn(b"Unfortunately, you don&#39;t have enough money to purchase paper!", response.data)
+
+
+    def test_can_sell(self):
+        with self.app:
+           
+            
+            self.app.post('/register', data=dict(username='test6', email_address='test6@test.com', password1='password', password2='password'), follow_redirects=True)
+            self.assertTrue(current_user.is_active)
+            self.assertIn('/market', request.url)
+            
+            self.assertTrue(current_user.get_id(), '1')
+            user = db.session.query(User).filter_by(username='test6').first()
+            self.assertEqual(user.username, 'test6')
+            
+            item = Item(id=1, name='paper', price=1200, barcode='testing', description='white', owner=1)
+            db.session.add(item)
+            db.session.commit()
+            self.assertTrue(user.items, 'paper')
+            response = self.app.post('/market', data=dict(sold_item='paper') ,follow_redirects=True)
+            self.assertIn(b"Congratulations! You sold paper back to market!", response.data)
+
+
+    def test_can_not_sell(self):
+        with self.app:
+           
+            
+            self.app.post('/register', data=dict(username='test7', email_address='test7@test.com', password1='password', password2='password'), follow_redirects=True)
+            self.assertTrue(current_user.is_active)
+            self.assertIn('/market', request.url)
+            
+            self.assertTrue(current_user.get_id(), '1')
+            user = db.session.query(User).filter_by(username='test7').first()
+            self.assertEqual(user.username, 'test7')
+            
+            item = Item(id=1, name='paper', price=1200, barcode='testing', description='white')
+            db.session.add(item)
+            db.session.commit()
+            self.assertEqual(user.items, [])
+            response = self.app.post('/market', data=dict(sold_item='paper') ,follow_redirects=True)
+            self.assertIn(b"Something went wrong with selling paper", response.data)
 
 
 

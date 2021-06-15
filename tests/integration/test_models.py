@@ -46,6 +46,8 @@ class TestModels(BaseTest):
             result = db.session.query(Item).filter_by(name='paper').first()
             self.assertIsNone(result)
             
-            
-            
-  
+    def test_can_sell_method(self):
+        item = User(username='qwert', email_address='test@gmail.com', password_hash='passwords', budget=2000, items=['paper']).can_sell(
+            Item(name='paper', price=1000, barcode='white', description='test')
+        )
+        # self.assertTrue(item)
