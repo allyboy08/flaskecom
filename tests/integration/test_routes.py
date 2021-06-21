@@ -139,8 +139,6 @@ class TestMarket(BaseTest):
 
     def test_can_sell(self):
         with self.app:
-           
-            
             self.app.post('/register', data=dict(username='test6', email_address='test6@test.com', password1='password', password2='password'), follow_redirects=True)
             self.assertTrue(current_user.is_active)
             self.assertIn('/market', request.url)

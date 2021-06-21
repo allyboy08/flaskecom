@@ -21,13 +21,10 @@ class TestModels(TestCase):
     def test_password(self):
         # test password getter method
         passw = User(username='qwerty', email_address='test@gmail.com', password_hash='password', budget=1100).password
-        print(passw)
+        self.assertEqual(passw, 'password')
         
     
-    def test_password_setter(self):
-        password = 'qwerty'
-        pw_hash = bcrypt.generate_password_hash(password)
-        self.assertTrue(pw_hash)
+   
     
     
     def test_password_verification(self):

@@ -47,7 +47,118 @@ class TestModels(BaseTest):
             self.assertIsNone(result)
             
     def test_can_sell_method(self):
-        item = User(username='qwert', email_address='test@gmail.com', password_hash='passwords', budget=2000, items=['paper']).can_sell(
-            Item(name='paper', price=1000, barcode='white', description='test')
-        )
-        # self.assertTrue(item)
+        with self.app_context:
+            response = self.app.post('/register', data=dict(
+                username='kevin', email_address='okay1@gmail.com',
+                password1='password', password2='password'), follow_redirects=True)
+            user = db.session.query(User).filter_by(username='kevin').first()
+            self.assertTrue(user)
+            
+            response1 = self.app.post('/register', data=dict(
+                username='carl', email_address='okay2@gmail.com',
+                password1='password', password2='password'), follow_redirects=True)
+            user1 = db.session.query(User).filter_by(username='carl').first()
+            self.assertTrue(user1)
+            
+            
+            item = Item(id=1, name="vans", price=2000, barcode=123456, description="white", owner=1)
+            db.session.add(item)
+            db.session.commit()
+            
+            items = db.session.query(Item).filter_by(name="vans")
+
+              
+            self.assertTrue(items)
+
+               
+            self.assertTrue(user.can_sell(item_obj=item))
+
+                
+            self.assertFalse(user1.can_sell(item_obj=item))
+        
+        
+        
+    def test_password_setter(self):
+        with self.app_context:
+            self.app.post('/register', data=dict(
+                username='steve', email_address='okays@gmail.com',
+                password1='password', password2='password'), follow_redirects=True)
+            user = db.session.query(User).filter_by(username='steve').first()
+            self.assertNotEqual(user.password, 'password')
+            print(user.password)
+            
+            
+            
+    def test_password_correction(self):
+        with self.app_context:
+            self.app.post('/register', data=dict(
+                username='steves', email_address='okayss@gmail.com',
+                password1='password', password2='password'), follow_redirects=True)
+            user = db.session.query(User).filter_by(username='steves').first()
+            # self.assertEqual(user)
+            
+            password_hash = User.check_password_correction(user, 'password')
+            self.assertTrue(password_hash)
+
+                # Logging in with an incorrect password
+            password_hash1 = User.check_password_correction(user, "passwords")
+            self.assertFalse(password_hash1)
+            
+            
+          
+    def test_item_buy_method(self):
+        with self.app_context:
+            response = self.app.post('/register', data=dict(
+                username='jeff', email_address='okay3@gmail.com',
+                password1='password', password2='password'), follow_redirects=True)
+            user = db.session.query(User).filter_by(username='jeff').first()
+            user.budget = 1500
+            self.assertTrue(user)
+            
+            
+            item = Item(id=1, name="time", price=100, barcode=123457, description="numbers", owner=1)
+            db.session.add(item)
+            db.session.commit()
+            
+            items = db.session.query(Item).filter_by(name="time").first()
+
+            items.buy(user)
+            self.assertTrue(items)  
+            
+            self.assertEqual(user.budget, 1400)
+            self.assertEqual(item.owner, 1)
+            
+            item.sell(user)
+            self.assertEqual(user.budget, 1500)
+            self.assertEqual(item.owner, None)
+            
+    
+    # def test_item_sell_method(self):
+    #     with self.app_context:
+    #         response = self.app.post('/register', data=dict(
+    #             username='jeff', email_address='okay5@gmail.com',
+    #             password1='password', password2='password'), follow_redirects=True)
+    #         user = db.session.query(User).filter_by(username='jeff').first()
+    #         user.budget = 1400
+    #         self.assertTrue(user)
+            
+            
+    #         item = Item(id=1, name="time", price=100, barcode=123457, description="numbers")
+    #         db.session.add(item)
+    #         db.session.commit()
+            
+    #         items = db.session.query(Item).filter_by(name="time").first()
+
+    #         items.sell(user)
+    #         self.assertTrue(items)  
+            
+    #         self.assertEqual(user.budget, 1400)
+    #         self.assertEqual(item.owner, 1)
+            
+    #         item.sell(user)
+    #         self.assertEqual(user.budget, 1500)
+    #         self.assertEqual(item.owner, None)
+            
+            
+            
+            
