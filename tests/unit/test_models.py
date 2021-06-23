@@ -61,27 +61,27 @@ class TestModels(TestCase):
         self.assertEqual(item.__repr__(), "Item car")
         
         
-    def test_item_buy_method(self):
-        user = User(id=1, username='tester', email_address='test@gmail.com', password_hash='testing', budget=5000)
+    # def test_item_buy_method(self):
+    #     user = User(id=1, username='tester', email_address='test@gmail.com', password_hash='testing', budget=5000)
 
-        item = Item(name='paper', price=1500, barcode='testing', description='white', owner=1)
+    #     item = Item(name='paper', price=1500, barcode='testing', description='white', owner=1)
 
-        can_buy = item.buy(user)
+    #     can_buy = item.buy(user)
 
-        db.session.commit()
+    #     db.session.commit()
 
-        self.assertIsNone(can_buy)
+    #     self.assertIsNone(can_buy)
 
-    def test_item_sell_method(self):
-        user = User(id=1, username='tester', email_address='test@gmail.com', password_hash='testing', budget=5000)
+    # def test_item_sell_method(self):
+    #     user = User(id=1, username='tester', email_address='test@gmail.com', password_hash='testing', budget=5000)
 
-        item = Item(name='Phone', price=2000, barcode='testing', description='Model', owner=1)
+    #     item = Item(name='Phone', price=2000, barcode='testing', description='Model', owner=1)
 
-        can_sell = item.sell(user)
+    #     can_sell = item.sell(user)
 
-        db.session.commit()
+    #     db.session.commit()
 
-        self.assertIsNone(can_sell)    
+    #     self.assertIsNone(can_sell)    
     
     
     
